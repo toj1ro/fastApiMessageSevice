@@ -24,7 +24,9 @@ def get_db():
 
 @app.post("/api/v1/message")
 async def message(message: schemas.MessageSchema, db: Session = Depends(get_db)):
-    return services.create_message(db, message)
+    message_id = services.create_message(db, message)
+    services.send_to_kafka(message.message, message_id)
+    return {"message": "OK"}
 
 
 @app.post("/api/v1/message_confirmation")
