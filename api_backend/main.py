@@ -1,7 +1,6 @@
 from fastapi import FastAPI, Depends
-from fastapi.security import OAuth2PasswordBearer
+from fastapi.security import APIKeyHeader
 from sqlalchemy.orm import Session
-
 import models
 import schemas
 import services
@@ -11,7 +10,7 @@ models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+token_auth_scheme = APIKeyHeader(name='JWT_Token')
 
 
 def get_db():
@@ -30,5 +29,8 @@ async def message(message: schemas.MessageSchema, db: Session = Depends(get_db))
 
 
 @app.post("/api/v1/message_confirmation")
-async def message_confirmation(status: schemas.StatusSchema, db: Session = Depends(get_db)):
-    return services.change_status(db, status.success, status.message_id)
+async def message_confirmation(status: schemas.StatusSchema, db: Session = Depends(get_db),
+                               token: str = Depends(token_auth_scheme)):
+    if token == "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoicG9zdF9tZXNzY" \
+                "WdlX2NvbmZpcm0ifQ.pPkwcm6kWg0_9DVWFcJYp2p2fW6vDtKGzxTIuqueMS0":
+        return services.change_status(db, status.success, status.message_id)

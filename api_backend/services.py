@@ -1,13 +1,7 @@
-from datetime import datetime, timedelta
-from json import loads
-from typing import Optional
-
-from jose import jwt
+from kafka import KafkaProducer
 from sqlalchemy.orm import Session
-
 import models
 import schemas
-from kafka import KafkaConsumer, KafkaProducer
 
 
 def create_message(db: Session, message: schemas.MessageSchema):
