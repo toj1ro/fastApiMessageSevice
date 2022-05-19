@@ -11,7 +11,7 @@ def listener():
                                "WdlX2NvbmZpcm0ifQ.pPkwcm6kWg0_9DVWFcJYp2p2fW6vDtKGzxTIuqueMS0"}
     for msg in consumer:
         message = msg.value.decode('utf-8')
-        if 'govno' in message.lower():
+        if 'абракадабра' in message.lower():
             r = requests.post('http://web:8000/api/v1/message_confirmation',
                               headers=header_jwt,
                               json={"message_id": msg.key.decode('utf-8'), "success": False})
